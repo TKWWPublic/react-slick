@@ -117,10 +117,7 @@ export const initializedState = spec => {
     slideWidth = listWidth;
   }
   let slideHeight =
-    listNode &&
-    getHeight(
-      listNode.querySelector('[data-index="0"]')
-    );
+    listNode && getHeight(listNode.querySelector('[data-index="0"]'));
   let listHeight = slideHeight * spec.slidesToShow;
   let currentSlide =
     spec.currentSlide === undefined ? spec.initialSlide : spec.currentSlide;
@@ -128,7 +125,11 @@ export const initializedState = spec => {
     currentSlide = slideCount - 1 - spec.initialSlide;
   }
   let lazyLoadedList = spec.lazyLoadedList || [];
-  let slidesToLoad = getOnDemandLazySlides({ ...spec, currentSlide, lazyLoadedList });
+  let slidesToLoad = getOnDemandLazySlides({
+    ...spec,
+    currentSlide,
+    lazyLoadedList
+  });
   lazyLoadedList.concat(slidesToLoad);
 
   let state = {
@@ -565,9 +566,12 @@ export const getTrackCSS = spec => {
     "slideWidth"
   ]);
   let trackWidth, trackHeight;
+  const variableWidthMax = 5000; // Arbitrary width, mirrors what is used by Slick Carousel
   const trackChildren = spec.slideCount + 2 * spec.slidesToShow;
-  if (!spec.vertical) {
+  if (!spec.vertical && !spec.variableWidth) {
     trackWidth = getTotalSlides(spec) * spec.slideWidth;
+  } else if (!spec.vertical && spec.variableWidth) {
+    trackWidth = trackChildren * variableWidthMax;
   } else {
     trackHeight = trackChildren * spec.slideHeight;
   }
