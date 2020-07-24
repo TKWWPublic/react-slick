@@ -3894,10 +3894,14 @@
             "slideWidth"
           ]);
           var trackWidth, trackHeight;
+          var variableWidthMax = 5000; // Arbitrary width, mirrors what is used by Slick Carousel
+
           var trackChildren = spec.slideCount + 2 * spec.slidesToShow;
 
-          if (!spec.vertical) {
+          if (!spec.vertical && !spec.variableWidth) {
             trackWidth = getTotalSlides(spec) * spec.slideWidth;
+          } else if (!spec.vertical && spec.variableWidth) {
+            trackWidth = trackChildren * variableWidthMax;
           } else {
             trackHeight = trackChildren * spec.slideHeight;
           }
